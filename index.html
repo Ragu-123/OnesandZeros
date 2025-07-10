@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnesandZeros - Advancing AI Through Open Science</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 215, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transform: translateY(-100%);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #1a1a1a, #333);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #333;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=2125&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #333;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: #FFD700;
+            box-shadow: 0 4px 15px rgba(26, 26, 26, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(26, 26, 26, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: #FFD700;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #FFF8DC 0%, #FFE4B5 100%);
+            position: relative;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=2032&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-text {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .about-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .about-visual {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #FF8C00;
+        }
+
+        .feature-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Models Section */
+        .models {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #FFE4B5 0%, #DEB887 100%);
+            position: relative;
+        }
+
+        .models::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .model-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .model-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #FFD700, #FF8C00);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .model-card h3 {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .model-stats {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat {
+            background: rgba(255, 215, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #FFD700;
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            color: #FFD700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #FFA500;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .about-visual {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <div class="logo-icon">1&0</div>
+                <span>OnesandZeros</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#values">Our Values</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="floating-elements">
+            <div class="floating-element" style="top: 10%; left: 10%;"></div>
+            <div class="floating-element" style="top: 20%; right: 15%;"></div>
+            <div class="floating-element" style="bottom: 30%; left: 20%;"></div>
+            <div class="floating-element" style="bottom: 20%; right: 10%;"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1>Advancing AI Through Open Science</h1>
+            <p class="subtitle">Building the future of artificial intelligence with transparency, collaboration, and innovation</p>
+            <div class="hero-buttons">
+                <a href="https://huggingface.co/onesnzeros-lab" class="btn btn-primary">Explore Models</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Who We Are</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Democratizing AI for Everyone</h3>
+                    <p>OnesandZeros is a pioneering AI research organization committed to advancing artificial intelligence through open science and collaborative innovation. We believe that the future of AI should be accessible, transparent, and beneficial for all.</p>
+                    <p>Our mission is to create cutting-edge AI models and tools that push the boundaries of what's possible while maintaining the highest standards of ethical AI development.</p>
+                    <a href="https://huggingface.co/onesnzeros-lab" class="btn btn-primary">Visit Our Hub</a>
+                </div>
+                <div class="about-visual">
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">🧠</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="AI Research" width="48" height="48">
+                        <h4>AI Research</h4>
+                        <p>Cutting-edge research in machine learning and neural networks</p>
+                    </div>
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">🔬</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/2910/2910791.png" alt="Open Science" width="48" height="48">
+                        <h4>Open Science</h4>
+                        <p>Transparent methodology and reproducible research</p>
+                    </div>
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">🤝</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Collaboration" width="48" height="48">
+                        <h4>Collaboration</h4>
+                        <p>Building together with the global AI community</p>
+                    </div>
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">⚡</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Innovation" width="48" height="48">
+                        <h4>Innovation</h4>
+                        <p>Pushing the boundaries of AI capabilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">🌍</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/616/616494.png" alt="Global Impact" width="48" height="48">
+                        <h4>Global Impact</h4>
+                        <p>Creating AI that benefits humanity worldwide</p>
+                    </div>
+                    <div class="feature-card">
+                        <!-- <div class="feature-icon">🔓</div> -->
+                        <img class="feature-icon" src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png" alt="Open Source" width="48" height="48">
+                        <h4>Open Source</h4>
+                        <p>Free and accessible AI models for everyone</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values Section -->
+    <section class="models" id="values">
+        <div class="container">
+            <h2 class="section-title">Our Values</h2>
+            <div class="models-grid">
+                <div class="model-card" style="opacity:1;transform:none;">
+                    <div class="model-header">
+                        <div class="model-icon" style="background:none;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Ethics" width="40" height="40">
+                        </div>
+                        <h3>Ethical AI</h3>
+                    </div>
+                    <p>We are committed to developing AI responsibly, ensuring fairness, transparency, and accountability in every project.</p>
+                </div>
+                <div class="model-card" style="opacity:1;transform:none;">
+                    <div class="model-header">
+                        <div class="model-icon" style="background:none;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Education" width="40" height="40">
+                        </div>
+                        <h3>Education</h3>
+                    </div>
+                    <p>We promote AI literacy and empower the next generation of researchers and engineers through open resources and learning opportunities.</p>
+                </div>
+                <div class="model-card" style="opacity:1;transform:none;">
+                    <div class="model-header">
+                        <div class="model-icon" style="background:none;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1828/1828970.png" alt="Community" width="40" height="40">
+                        </div>
+                        <h3>Community</h3>
+                    </div>
+                    <p>We foster a collaborative environment, welcoming contributions and ideas from diverse backgrounds to drive innovation together.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>OnesandZeros</h4>
+                    <p>Advancing AI through open science and collaboration</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <p><a href="https://huggingface.co/onesnzeros-lab">Hugging Face</a></p>
+                    <!-- <p><a href="#models">Models</a></p> -->
+                    <p><a href="#values">Our Values</a></p>
+                    <p><a href="#about">About</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <p><a href="#">Discord</a></p>
+                    <p><a href="#">Twitter</a></p>
+                    <p><a href="#">GitHub</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OnesandZeros. Building the future of AI together.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Header animation
+        gsap.to("header", {
+            y: 0,
+            duration: 1,
+            delay: 0.5,
+            ease: "power2.out"
+        });
+
+        // Hero animations
+        const tl = gsap.timeline();
+        tl.to(".hero h1", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out"
+        })
+        .to(".hero .subtitle", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.5")
+        .to(".hero .btn", {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "power2.out"
+        }, "-=0.3");
+
+        // Floating elements animation
+        gsap.to(".floating-element", {
+            y: "random(-50, 50)",
+            x: "random(-30, 30)",
+            rotation: "random(-15, 15)",
+            duration: "random(3, 6)",
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            stagger: 0.5
+        });
+
+        // Section animations with ScrollTrigger
+        gsap.to(".section-title", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".section-title",
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // About section animations
+        gsap.to(".about-text", {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".about-text",
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        gsap.to(".about-visual", {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".about-visual",
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Feature cards stagger animation
+        gsap.to(".feature-card", {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".feature-card",
+                start: "top 85%",
+                end: "bottom 15%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Model cards animation
+        gsap.to(".model-card", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".models-grid",
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: target,
+                        ease: "power2.inOut"
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for hero background
+        // gsap.to(".hero::before", {
+        //     yPercent: -50,
+        //     ease: "none",
+        //     scrollTrigger: {
+        //         trigger: ".hero",
+        //         start: "top bottom",
+        //         end: "bottom top",
+        //         scrub: true
+        //     }
+        // });
+
+        // Interactive hover effects for buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                gsap.to(this, {
+                    scale: 1.05,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+        });
+
+        // Background color animation on scroll
+        ScrollTrigger.create({
+            trigger: ".about",
+            start: "top 50%",
+            end: "bottom 50%",
+            onEnter: () => {
+                gsap.to("body", {
+                    backgroundColor: "#FFF8DC",
+                    duration: 0.5
+                });
+            },
+            onLeave: () => {
+                gsap.to("body", {
+                    backgroundColor: "#FFE4B5",
+                    duration: 0.5
+                });
+            },
+            onEnterBack: () => {
+                gsap.to("body", {
+                    backgroundColor: "#FFF8DC",
+                    duration: 0.5
+                });
+            },
+            onLeaveBack: () => {
+                gsap.to("body", {
+                    backgroundColor: "#FFD700",
+                    duration: 0.5
+                });
+            }
+        });
+
+        // Text typing effect for hero title
+        const heroTitle = document.querySelector('.hero h1');
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+        
+        gsap.to({}, {
+            duration: 2,
+            delay: 1,
+            onUpdate: function() {
+                const progress = this.progress();
+                const currentLength = Math.floor(progress * originalText.length);
+                heroTitle.textContent = originalText.substring(0, currentLength);
+            }
+        });
+    </script>
+</body>
+</html>
